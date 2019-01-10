@@ -1,0 +1,13 @@
+server:
+  port: 7171
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.102.41.26:3306/giisdemo?serverTimezone=UTC
+    username: root
+    password: newpassword
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
