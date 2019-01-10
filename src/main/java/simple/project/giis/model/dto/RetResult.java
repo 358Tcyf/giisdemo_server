@@ -1,4 +1,4 @@
-package simple.project.giis.dto;
+package simple.project.giis.model.dto;
 
 public class RetResult<T> {
     private int code;

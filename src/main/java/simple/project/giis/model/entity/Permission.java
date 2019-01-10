@@ -1,25 +1,23 @@
-package simple.project.giis.entity;
+package simple.project.giis.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import java.util.List;
 
 /**
  * @author Simple
  * @date on 2019/1/3 15:33
  */
 @Entity
-public class Role extends BaseEntity {
+public class Permission extends BaseEntity {
 
-    @Column(nullable = false, unique = true)
+    @Column
     private String name;
 
     @Column
     private String description;
 
-    @ManyToMany
-    private List<Permission> permissionList;
+    @Column
+    private String path;
 
     public String getName() {
         return name;
@@ -37,11 +35,11 @@ public class Role extends BaseEntity {
         this.description = description;
     }
 
-    public List<Permission> getPermissionList() {
-        return permissionList;
+    public String getPath() {
+        return path;
     }
 
-    public void setPermissionList(List<Permission> permissionList) {
-        this.permissionList = permissionList;
+    public void setPath(String path) {
+        this.path = path;
     }
 }

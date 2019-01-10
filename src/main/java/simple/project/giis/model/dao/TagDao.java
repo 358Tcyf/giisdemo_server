@@ -1,7 +1,7 @@
-package simple.project.giis.dao;
+package simple.project.giis.model.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import simple.project.giis.entity.Tag;
+import simple.project.giis.model.entity.Tag;
 
 /**
  * @author Simple

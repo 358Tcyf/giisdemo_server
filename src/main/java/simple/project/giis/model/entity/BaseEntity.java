@@ -1,4 +1,4 @@
-package simple.project.giis.entity;
+package simple.project.giis.model.entity;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

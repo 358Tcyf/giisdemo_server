@@ -1,8 +1,8 @@
 package simple.project.giis.service.impl;
 
 import org.springframework.stereotype.Service;
-import simple.project.giis.dao.UserDao;
-import simple.project.giis.entity.User;
+import simple.project.giis.model.dao.UserDao;
+import simple.project.giis.model.entity.User;
 import simple.project.giis.service.UserService;
 
 import javax.annotation.Resource;
@@ -18,27 +18,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(User user) {
-        return userDao.findByPhoneAndPasswd(user.getPhone(), user.getPasswd());
+        return userDao.findByPhoneAndPassword(user.getPhone(), user.getPassword());
     }
 
     @Override
-    public User login(String phone, String passwd) {
-        return userDao.findByPhoneAndPasswd(phone, passwd);
+    public User login(String phone, String password) {
+        return userDao.findByPhoneAndPassword(phone, password);
     }
 
     @Override
     public void signUp(User user) {
-        user.setAlias(user.getName() + user.getPhone());
+        user.setUid(user.getName() + user.getPhone());
         userDao.save(user);
     }
 
     @Override
-    public void signUp(String name, String phone, String passwd) {
+    public void signUp(String name, String phone, String password) {
         User user = new User();
         user.setName(name);
         user.setPhone(phone);
-        user.setPasswd(passwd);
-        user.setAlias(user.getName() + user.getPhone());
+        user.setPassword(password);
+        user.setUid(user.getName() + user.getPhone());
         userDao.save(user);
     }
 
@@ -54,12 +54,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkPwd(User user) {
-        return (null != userDao.findByPhoneAndPasswd(user.getPhone(), user.getPasswd()));
+        return (null != userDao.findByPhoneAndPassword(user.getPhone(), user.getPassword()));
     }
 
     @Override
-    public boolean checkPwd(String phone, String passwd) {
-        return (null != userDao.findByPhoneAndPasswd(phone, passwd));
+    public boolean checkPwd(String phone, String password) {
+        return (null != userDao.findByPhoneAndPassword(phone, password));
     }
 
 }
