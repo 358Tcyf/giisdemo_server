@@ -9,12 +9,14 @@ import simple.project.giis.service.impl.UserServiceImpl;
 
 import javax.annotation.Resource;
 
+import static simple.project.giis.utils.VerifyCodeUtil.createCode;
+
 /**
  * @author Simple
  * @date on 2019/1/3 16:27
  */
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user")
 public class UserController {
     @Resource
     UserServiceImpl userService;
@@ -42,5 +44,11 @@ public class UserController {
             userService.signUp(name, phone, password);
             return RetResponse.makeOKRsp("sign up success!");
         }
+    }
+
+    @RequestMapping(value = "/getCode")
+    public RetResult<String> getCode(String cid, String phone) {
+        String code = createCode();
+        return RetResponse.makeOKRsp(code);
     }
 }
