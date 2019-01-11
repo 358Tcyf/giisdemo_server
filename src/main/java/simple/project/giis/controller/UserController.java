@@ -4,10 +4,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import simple.project.giis.model.dto.RetResponse;
 import simple.project.giis.model.dto.RetResult;
+import simple.project.giis.model.entity.PushSetting;
 import simple.project.giis.model.entity.User;
+import simple.project.giis.service.impl.PushServiceImpl;
 import simple.project.giis.service.impl.UserServiceImpl;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 import static simple.project.giis.utils.VerifyCodeUtil.createCode;
 
@@ -16,39 +19,74 @@ import static simple.project.giis.utils.VerifyCodeUtil.createCode;
  * @date on 2019/1/3 16:27
  */
 @RestController
-@RequestMapping("/user")
 public class UserController {
+
+    private static final String USER = "/user";
+    private static final String MANAGER = "/manager";
+
     @Resource
     UserServiceImpl userService;
 
-    @RequestMapping(value = "/login")
+    @Resource
+    PushServiceImpl pushService;
+
+    @RequestMapping(value = USER + "/login")
     public RetResult<User> login(String phone, String password) {
-        System.out.println("phone is " + phone + "\npasswd is " + password);
+        System.out.println("phone is " + phone + "\npassword is " + password);
         if (!userService.isExisted(phone)) {
-            return RetResponse.makeErrRsp("phone not found");
+            return RetResponse.makeErrRsp("账号错误");
         } else if (!userService.checkPwd(phone, password)) {
-            return RetResponse.makeErrRsp("password error");
+            return RetResponse.makeErrRsp("密码错误");
         } else {
             System.out.println("login success!");
-            return RetResponse.makeOKRsp("login success!", userService.login(phone, password));
+            return RetResponse.makeOKRsp("登陆成功", userService.login(phone, password));
         }
     }
 
-    @RequestMapping(value = "/signUp")
+    @RequestMapping(value = USER + "/signUp")
     public RetResult<User> signUp(String name, String phone, String password) {
-        System.out.println("name is " + name + "\nphone is " + phone + password);
-        if (userService.isExisted(phone)) {
-            return RetResponse.makeErrRsp("user's phone is existed");
+        String code = "";
+        if (!userService.checkVerifyCode(phone, code)) {
+            System.out.println("name is " + name + "\nphone is " + phone + "\npassword is " + password);
+            if (userService.isExisted(phone)) {
+                return RetResponse.makeErrRsp("手机号已被注册");
+            } else {
+                System.out.println("sign up success!");
+                userService.signUp(name, phone, password);
+                return RetResponse.makeOKRsp("注册成功");
+            }
         } else {
-            System.out.println("sign up success!");
-            userService.signUp(name, phone, password);
-            return RetResponse.makeOKRsp("sign up success!");
+            return RetResponse.makeErrRsp("验证码错误");
         }
     }
 
-    @RequestMapping(value = "/getCode")
+    @RequestMapping(value = USER + "/getCode")
     public RetResult<String> getCode(String cid, String phone) {
         String code = createCode();
         return RetResponse.makeOKRsp(code);
+    }
+
+    @RequestMapping(value = USER + "/userInfo")
+    public RetResult<Map<String, Object>> getUserInfo(String phone) {
+        if (userService.isExisted(phone))
+            return RetResponse.makeErrRsp("查无此人");
+        else {
+            return RetResponse.makeOKRsp(userService.getInfo(phone));
+        }
+    }
+
+    @RequestMapping(value = MANAGER + "/userList")
+    public RetResult<Map<String, Object>> getUserList() {
+        return RetResponse.makeOKRsp(userService.getList());
+    }
+
+    @RequestMapping(value = USER + "/getSetting")
+    public RetResult<PushSetting> getPushSetting(String phone) {
+        return RetResponse.makeOKRsp(pushService.getPushSetting(phone));
+    }
+
+    @RequestMapping(value = USER + "/setSetting")
+    public void setPushSetting(String phone, boolean var1, boolean var2, boolean var3, boolean var4) {
+        pushService.setPushSetting(phone, var1, var2, var3, var4);
     }
 }

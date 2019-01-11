@@ -10,26 +10,49 @@ import java.util.List;
 @Entity
 public class User extends BaseEntity {
 
+    public User() {
+    }
+
+    public User(String phone, String name) {
+        this.phone = phone;
+        this.name = name;
+    }
+
+    /*可公开*/
     @Column(nullable = false, unique = true)
     private String phone;
 
+    /*可公开*/
     @Column
     private String name;
 
+    /*可公开*/
     @Column
     private String email;
 
+    /*不可公开*/
     @Column(nullable = false)
     private String password;
 
+    /*可公开*/
     @ManyToOne
     private Role role;
 
+    /*可公开*/
     @Column(unique = true)
     private String uid;
 
+    /*可公开*/
+    @OneToOne
+    private UserFile pic;
+
+    /*不必公开*/
     @ManyToMany
     private List<Tag> care;
+
+    /*不必公开*/
+    @OneToOne
+    private PushSetting pushSetting;
 
     public String getPhone() {
         return phone;
@@ -85,5 +108,21 @@ public class User extends BaseEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public PushSetting getPushSetting() {
+        return pushSetting;
+    }
+
+    public void setPushSetting(PushSetting pushSetting) {
+        this.pushSetting = pushSetting;
+    }
+
+    public UserFile getPic() {
+        return pic;
+    }
+
+    public void setPic(UserFile pic) {
+        this.pic = pic;
     }
 }
