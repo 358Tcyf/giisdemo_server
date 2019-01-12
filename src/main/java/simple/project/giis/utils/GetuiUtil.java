@@ -1,7 +1,6 @@
 package simple.project.giis.utils;
 
 import com.gexin.rp.sdk.base.IPushResult;
-import com.gexin.rp.sdk.base.IQueryResult;
 import com.gexin.rp.sdk.base.ITemplate;
 import com.gexin.rp.sdk.base.impl.AppMessage;
 import com.gexin.rp.sdk.base.impl.SingleMessage;
@@ -14,9 +13,7 @@ import com.gexin.rp.sdk.template.NotyPopLoadTemplate;
 import com.gexin.rp.sdk.template.TransmissionTemplate;
 import com.gexin.rp.sdk.template.style.Style0;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,47 +28,45 @@ public class GetuiUtil {
     private static String masterSecret = "3IgHdO0iRB73zG9dXPEcR";
     private static String url = "http://sdk.open.api.igexin.com/apiex.htm";
 
-    static String CID = "";
+    public static String CID = "";
     //别名推送方式
-    static String Alias = "ys15858120165";
+    public static String Alias = "ys15858120165";
 
-    static String Tag0 = "sports";
+    public static String Tag0 = "sports";
 
     public static void main(String[] args) throws IOException {
-        String title = null, content = null, type = null;
-        InputStreamReader is = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(is);
-        while (true) {
-            System.out.print("请输入标题： ");
-            title = br.readLine();
-            System.out.print("请输入内容： ");
-            br = new BufferedReader(is);
-            content = br.readLine();
-            System.out.println("title is" + title + ", content is " + content);
-            System.out.print("请选择发送方式（1、普通消息 2、跳转网页 3、跳转下载 4、单人发送）： ");
-            br = new BufferedReader(is);
-            type = br.readLine();
-            switch (type) {
-                case "2":
-                    sendMessage(linkTemplateDemo(setStyle(title, content)));
-                    break;
-                case "3":
-                    sendMessage(notyPopLoadTemplateDemo(setStyle(title, content)));
-                    break;
-                case "4":
-                    sendSingleMessage(transmissionTemplateDemo(title, content));
-                    break;
-                case "5":
-                    sendMessage(transmissionTemplateDemo(title, content));
-                    break;
-                default:
-                    sendMessage(notificationTemplateDemo(setStyle(title, content)));
 
-            }
-        }
+//        String title = null, content = null, type = null;
+//        InputStreamReader is = new InputStreamReader(System.in);
+//        BufferedReader br = new BufferedReader(is);
+//        while (true) {
+//            System.out.print("请输入标题： ");
+//            title = br.readLine();
+//            System.out.print("请输入内容： ");
+//            br = new BufferedReader(is);
+//            content = br.readLine();
+//            System.out.println("title is" + title + ", content is " + content);
+//            System.out.print("请选择发送方式（1、普通消息 2、跳转网页 3、跳转下载）： ");
+//            br = new BufferedReader(is);
+//            type = br.readLine();
+//            switch (type) {
+//                case "2":
+//                    sendMessage(linkTemplateDemo(setStyle(title, content)));
+//                    break;
+//                case "3":
+//                    sendMessage(notyPopLoadTemplateDemo(setStyle(title, content)));
+//                    break;
+//                case "4":
+//                    sendMessage(transmissionTemplateDemo(title, content));
+//                    break;
+//                default:
+//                    sendMessage(notificationTemplateDemo(setStyle(title, content)));
+//
+//            }
+//        }
     }
 
-    private static Style0 setStyle(String title, String content) {
+    public static Style0 setStyle(String title, String content) {
         Style0 style = new Style0();
         // 设置通知栏标题与内容
         style.setTitle(title);
@@ -87,10 +82,11 @@ public class GetuiUtil {
         return style;
     }
 
+
     /*
      * 发送给全体
      * */
-    private static void sendMessage(ITemplate template) {
+    public static void sendMessage(ITemplate template) {
         IGtPush push = new IGtPush(url, appKey, masterSecret);
         List<String> appIds = new ArrayList<String>();
         appIds.add(appId);
@@ -100,9 +96,6 @@ public class GetuiUtil {
         message.setAppIdList(appIds);
         message.setOffline(true);
         message.setOfflineExpireTime(1000 * 600);
-        List<String> tagList = new ArrayList<String>();
-        tagList.add("杭州");
-        IQueryResult iret = push.setClientTag(appId, CID, tagList);
         IPushResult ret = push.pushMessageToApp(message);
         System.out.println(ret.getResponse().toString());
 
@@ -110,22 +103,23 @@ public class GetuiUtil {
 
 
     /*
-     * 向单个clientid或别名用户推送消息
+     * type: 0 ->向单个clientid用户推送消息
+     * type: 1->向单个别名用户推送消息
      * 某用户发生了一笔交易，银行及时下发一条推送消息给该用户
      * */
-    private static void sendSingleMessage(ITemplate template) {
+    public static void sendSingleMessage(int type, String str, ITemplate template) {
         IGtPush push = new IGtPush(url, appKey, masterSecret);
         SingleMessage message = new SingleMessage();
         message.setOffline(true);
-        // 离线有效时间，单位为毫秒，可选
         message.setOfflineExpireTime(24 * 3600 * 1000);
         message.setData(template);
-        // 可选，1为wifi，0为不限制网络环境。根据手机处于的网络情况，决定是否下发
         message.setPushNetWorkType(0);
         Target target = new Target();
         target.setAppId(appId);
-//        target.setClientId(CID);
-        target.setAlias(Alias);
+        if (type == 0)
+            target.setClientId(str);
+        else if (type == 1)
+            target.setAppId(str);
         IPushResult ret = null;
         try {
             ret = push.pushMessageToSingle(message, target);

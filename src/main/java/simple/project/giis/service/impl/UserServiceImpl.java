@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static simple.project.giis.utils.UuidUtil.getNum19;
+
 /**
  * @author Simple
  * @date on 2019/1/3 16:26
@@ -66,7 +68,7 @@ public class UserServiceImpl implements UserService {
         user.setName(name);
         user.setPhone(phone);
         user.setPassword(password);
-        user.setUid(user.getName() + user.getPhone());
+        user.setUid(getNum19());
         userDao.save(user);
     }
 
