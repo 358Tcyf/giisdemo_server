@@ -12,7 +12,6 @@ import simple.project.giis.service.impl.UserServiceImpl;
 import javax.annotation.Resource;
 import java.util.Map;
 
-import static simple.project.giis.utils.GetuiUtil.*;
 import static simple.project.giis.utils.VerifyCodeUtil.createCode;
 
 /**
@@ -64,7 +63,7 @@ public class UserController {
     @RequestMapping(value = USER + "/getCode")
     public RetResult getCode(String cid, String phone) {
         String code = createCode();
-        sendSingleMessage(0, cid, linkTemplateDemo(setStyle("验证码", code)));
+//        sendSingleMessage(0, cid, linkTemplateDemo(setStyle("验证码", code)));
         return RetResponse.makeOKRsp();
     }
 
