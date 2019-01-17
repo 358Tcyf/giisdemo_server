@@ -32,4 +32,5 @@ public interface UserService {
 
     Map<String, Object> getList();
 
+    void updateInfo(String oldPhone,String newPhone, String password);
 }

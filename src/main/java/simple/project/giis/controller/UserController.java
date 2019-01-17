@@ -60,6 +60,17 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = USER + "/updateInfo")
+    public RetResult updateInfo(String oldPhone, String newPhone, String password) {
+        System.out.println("oldPhone is " + oldPhone + "\nnewPhone is " + newPhone + "\npassword is " + password);
+        if (!userService.isExisted(oldPhone)) {
+            return RetResponse.makeErrRsp("账号不存在");
+        } else {
+            userService.updateInfo(oldPhone, newPhone, password);
+            return RetResponse.makeOKRsp("修改成功");
+        }
+    }
+
     @RequestMapping(value = USER + "/getCode")
     public RetResult getCode(String cid, String phone) {
         String code = createCode();

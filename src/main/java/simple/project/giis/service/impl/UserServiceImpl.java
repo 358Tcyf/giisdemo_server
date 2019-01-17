@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.hibernate.annotations.common.util.StringHelper.isEmpty;
 import static simple.project.giis.utils.UuidUtil.getNum19;
 
 /**
@@ -25,7 +26,6 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     VerifyCodeDao codeDao;
-
 
 
     @Override
@@ -117,5 +117,18 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
+    public void updateInfo(String oldPhone, String newPhone, String password) {
+        if (!isEmpty(newPhone)) {
+            User user = userDao.findByPhone(oldPhone);
+            user.setPhone(newPhone);
+            userDao.save(user);
+        }
+        if (!isEmpty(password)) {
+            User user = userDao.findByPhone(oldPhone);
+            user.setPassword(password);
+            userDao.save(user);
+        }
+    }
 
 }
