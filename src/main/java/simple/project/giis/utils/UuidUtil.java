@@ -19,6 +19,6 @@ public class UuidUtil {
     }
 
     public static String getUUID32() {
-        return UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
+        return UUID.randomUUID().toString().replaceAll("-", "").toLowerCase();
     }
 }
