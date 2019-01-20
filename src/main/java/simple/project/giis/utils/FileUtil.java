@@ -12,30 +12,37 @@ import java.io.IOException;
  * @date on 2019/1/19 21:54
  */
 public class FileUtil {
-    /** 绝对路径 **/
+    /**
+     * 绝对路径
+     **/
     public static String absolutePath = "";
 
-    /** 静态目录 **/
-    public static String staticDir = "static/file/";
+    /**
+     * 静态目录
+     **/
+    public static String staticDir = "/static/file/";
 
     public static String upload(MultipartFile file, String uuid) throws IOException {
         //第一次会创建文件夹
         createDirIfNotExists();
 
-        String resultPath =  uuid+getSuffix(file.getOriginalFilename());
-        System.out.println("resultPath is "+resultPath);
+        String resultPath = staticDir + uuid + getSuffix(file.getOriginalFilename());
+        System.out.println("resultPath is " + resultPath);
         //存文件
-        File uploadFile = new File(absolutePath, staticDir + resultPath);
+        File uploadFile = new File(absolutePath, resultPath);
         file.transferTo(uploadFile);
 
         return resultPath;
     }
+
     /**
      * 创建文件夹路径
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void createDirIfNotExists() {
-        if (!absolutePath.isEmpty()) {return;}
+        if (!absolutePath.isEmpty()) {
+            return;
+        }
 
         //获取跟目录
         File file;
@@ -44,25 +51,25 @@ public class FileUtil {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("获取根目录失败，无法创建上传目录！");
         }
-        if(!file.exists()) {
+        if (!file.exists()) {
             file = new File("");
         }
 
         absolutePath = file.getAbsolutePath();
 
-        File upload = new File(absolutePath, staticDir );
-        if(!upload.exists()) {
+        File upload = new File(absolutePath, staticDir);
+        if (!upload.exists()) {
             upload.mkdirs();
         }
     }
 
-    public static boolean delete(String uuid,String suffix) {
+    public static boolean delete(String uuid, String suffix) {
         File file = new File(absolutePath, staticDir + uuid + suffix);
         return file.exists() && file.delete();
     }
 
     public static String getSuffix(String fileName) {
-        if(!fileName.contains(".")) {
+        if (!fileName.contains(".")) {
             return "";
         }
         int dotIndex = fileName.indexOf(".");
