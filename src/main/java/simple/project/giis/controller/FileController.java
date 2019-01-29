@@ -15,9 +15,7 @@ import simple.project.giis.utils.FileUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static simple.project.giis.utils.UuidUtil.getUUID32;
 
@@ -26,6 +24,7 @@ public class FileController {
 
     private static final String FILE = "/file";
     private static final String PIC = "/pic";
+    private static final String AD = "/ad";
     @Resource
     private FileServiceImpl fileService;
 
@@ -59,20 +58,16 @@ public class FileController {
     }
 
 
-    @GetMapping(FILE + "/{filename:.+}")
-    public void downFile(@PathVariable String filename, HttpServletResponse response) throws IOException {
-        response.setContentType("image/png");
-        byte[] data = new byte[0];
-        InputStream inputStream = null;
-        try {
-            inputStream = new ClassPathResource("/static/img/" + filename + ".png").getInputStream();
-            data = new byte[inputStream.available()];
-            inputStream.read(data);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ;
+    @GetMapping(FILE + "/apk")
+    public void downApkFile(HttpServletResponse response) throws IOException {
+        String filename = "app-debug.apk";
+        response.setHeader("content-type", "application/octet-stream");
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=" + filename);
+        byte[] data;
+        InputStream inputStream = new ClassPathResource("/static/apk/" + filename).getInputStream();
+        data = new byte[inputStream.available()];
+        inputStream.read(data);
         inputStream.close();
         OutputStream stream = response.getOutputStream();
         stream.write(data);
@@ -81,24 +76,36 @@ public class FileController {
     }
 
 
+    @GetMapping(AD + "/{filename:.+}")
+    public void downBannerAd(@PathVariable String filename, HttpServletResponse response) throws IOException {
+        response.setContentType("image/png");
+        byte[] data;
+        InputStream inputStream = new ClassPathResource("/static/img/" + filename + ".png").getInputStream();
+        data = new byte[inputStream.available()];
+        inputStream.read(data);
+        inputStream.close();
+        OutputStream stream = response.getOutputStream();
+        stream.write(data);
+        stream.flush();
+        stream.close();
+    }
+
     @RequestMapping(PIC + "/{phone:.+}")
     public void downloadPic(@PathVariable String phone, HttpServletResponse response) throws IOException {
         response.setContentType("image/png");
-        byte[] data = new byte[0];
+        byte[] data;
         if (!userService.isExisted(phone)) {
             System.out.println("用户不存在");
             return;
         }
         User user = userDao.findByPhone(phone);
         String path = user.getPic().getPath();
-        InputStream inputStream = null;
-        try {
-            inputStream = new ClassPathResource(path).getInputStream();
-            data = new byte[inputStream.available()];
-            inputStream.read(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        File file = new File(path);
+        if (!file.exists())
+            path = "/static/img/user_pic_blue.png";
+        InputStream inputStream = new ClassPathResource(path).getInputStream();
+        data = new byte[inputStream.available()];
+        inputStream.read(data);
         inputStream.close();
         OutputStream stream = response.getOutputStream();
         stream.write(data);

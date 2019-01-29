@@ -122,12 +122,12 @@ public class UserServiceImpl implements UserService {
         if (!isEmpty(newPhone)) {
             User user = userDao.findByPhone(oldPhone);
             user.setPhone(newPhone);
-            userDao.save(user);
+            userDao.saveAndFlush(user);
         }
         if (!isEmpty(password)) {
             User user = userDao.findByPhone(oldPhone);
             user.setPassword(password);
-            userDao.save(user);
+            userDao.saveAndFlush(user);
         }
     }
 

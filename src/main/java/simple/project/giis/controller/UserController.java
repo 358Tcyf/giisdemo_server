@@ -1,6 +1,7 @@
 package simple.project.giis.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import simple.project.giis.model.dto.RetResponse;
 import simple.project.giis.model.dto.RetResult;
@@ -61,6 +62,7 @@ public class UserController {
     }
 
     @RequestMapping(value = USER + "/updateInfo")
+    @ResponseBody
     public RetResult updateInfo(String oldPhone, String newPhone, String password) {
         System.out.println("oldPhone is " + oldPhone + "\nnewPhone is " + newPhone + "\npassword is " + password);
         if (!userService.isExisted(oldPhone)) {

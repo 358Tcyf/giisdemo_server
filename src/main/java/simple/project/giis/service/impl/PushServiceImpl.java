@@ -18,9 +18,20 @@ public class PushServiceImpl implements PushService {
     PushSettingDao pushSettingDao;
 
     @Override
+    public boolean isExisted(String phone) {
+        return (null != userDao.findByPhone(phone).getPushSetting());
+    }
+
+    @Override
+    public PushSetting creatPushSetting(PushSetting setting) {
+        return pushSettingDao.saveAndFlush(setting);
+    }
+
+    @Override
     public PushSetting getPushSetting(String phone) {
         return userDao.findByPhone(phone).getPushSetting();
     }
+
 
     @Override
     public void setPushSetting(String phone, boolean var1, boolean var2, boolean var3, boolean var4) {

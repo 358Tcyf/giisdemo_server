@@ -5,6 +5,18 @@ import javax.persistence.Entity;
 @Entity
 public class PushSetting extends BaseEntity {
 
+
+    public PushSetting() {
+    }
+
+    public PushSetting( boolean var1, boolean var2, boolean var3, boolean var4) {
+        setPushSwitch(var1);
+        setVoice(var2);
+        setVibrate(var3);
+        setFloatWindow(var4);
+    }
+
+
     private boolean pushSwitch;
 
     private boolean voice;
@@ -45,5 +57,6 @@ public class PushSetting extends BaseEntity {
     public void setFloatWindow(boolean floatWindow) {
         this.floatWindow = floatWindow;
     }
+
 
 }
