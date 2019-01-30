@@ -90,8 +90,8 @@ public class UserController {
     }
 
     @RequestMapping(value = MANAGER + "/userList")
-    public RetResult<Map<String, Object>> getUserList() {
-        return RetResponse.makeOKRsp(userService.getList());
+    public RetResult<Map<String, Object>> getUserList(String phone) {
+        return RetResponse.makeOKRsp(userService.getList(phone));
     }
 
     @RequestMapping(value = USER + "/getSetting")

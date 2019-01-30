@@ -95,25 +95,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> getList() {
+    public Map<String, Object> getList(String phone) {
+        String role = userDao.findByPhone(phone).getRole().getName();
         List<User> all = userDao.findAll();
         Map<String, Object> result = new HashMap<>();
         List<Map<String, Object>> manager = new ArrayList<>();
-        List<Map<String, Object>> staff = new ArrayList<>();
+        List<Map<String, Object>> produce = new ArrayList<>();
+        List<Map<String, Object>> sale = new ArrayList<>();
         for (User user : all) {
             switch (user.getRole().getName()) {
                 case "manager":
                     manager.add(getInfo(user.getPhone()));
                     break;
-                case "staff":
-                    staff.add(getInfo(user.getPhone()));
+                case "produce staff":
+                    produce.add(getInfo(user.getPhone()));
+                    break;
+                case "sale staff":
+                    sale.add(getInfo(user.getPhone()));
                     break;
                 default:
             }
         }
-        result.putIfAbsent("manager", manager);
-        result.putIfAbsent("staff", staff);
-
+        switch (role) {
+            case "manager":
+                result.putIfAbsent("manager", manager);
+                result.putIfAbsent("produce staff", produce);
+                result.putIfAbsent("sale staff", sale);
+                break;
+            case "produce staff":
+                result.putIfAbsent("produce staff", produce);
+                break;
+            case "sale staff":
+                result.putIfAbsent("sale staff", sale);
+                break;
+            default:
+        }
         return result;
     }
 

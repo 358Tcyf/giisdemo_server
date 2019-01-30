@@ -40,7 +40,7 @@ public class PushController {
             return RetResponse.makeErrRsp("账号不存在");
         } else if (!pushService.isExisted(userPhone)) {
             User user = userDao.findByPhone(userPhone);
-            user.setPushSetting(pushService.creatPushSetting(new PushSetting(pushSwitch, voice, vibrate, floatWindow)));
+            user.setPushSetting(pushService.creatPushSetting(new PushSetting(true, false, false, false)));
             userDao.saveAndFlush(user);
             return RetResponse.makeOKRsp("保存成功");
         } else {

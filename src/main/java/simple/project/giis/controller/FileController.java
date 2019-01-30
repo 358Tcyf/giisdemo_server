@@ -90,19 +90,20 @@ public class FileController {
         stream.close();
     }
 
-    @RequestMapping(PIC + "/{phone:.+}")
-    public void downloadPic(@PathVariable String phone, HttpServletResponse response) throws IOException {
+    @RequestMapping(PIC + "/{uid:.+}")
+    public void downloadPic(@PathVariable String uid, HttpServletResponse response) throws IOException {
         response.setContentType("image/png");
         byte[] data;
-        if (!userService.isExisted(phone)) {
+        if (null == userDao.findByUid(uid)) {
             System.out.println("用户不存在");
             return;
         }
-        User user = userDao.findByPhone(phone);
+        User user = userDao.findByUid(uid);
         String path = user.getPic().getPath();
+        System.out.println(path);
         File file = new File(path);
-        if (!file.exists())
-            path = "/static/img/user_pic_blue.png";
+//        if (!file.exists())
+//            path = "/static/img/user_pic_blue.png";
         InputStream inputStream = new ClassPathResource(path).getInputStream();
         data = new byte[inputStream.available()];
         inputStream.read(data);

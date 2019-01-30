@@ -30,7 +30,7 @@ public interface UserService {
 
     Map<String, Object> getInfo(String phone);
 
-    Map<String, Object> getList();
+    Map<String, Object> getList(String phone);
 
-    void updateInfo(String oldPhone,String newPhone, String password);
+    void updateInfo(String oldPhone, String newPhone, String password);
 }
